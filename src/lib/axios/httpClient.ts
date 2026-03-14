@@ -1,3 +1,4 @@
+import { ApiResponse } from "@/types/api.types";
 import axios from "axios";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -22,9 +23,13 @@ export interface ApiRequestOptions {
   headers?: Record<string, string>;
 }
 
-const httpGet = async (endpoint: string, options?: ApiRequestOptions) => {
+const httpGet = async <TData>(
+  endpoint: string,
+  options?: ApiRequestOptions,
+): Promise<ApiResponse<TData>> => {
   try {
-    const response = await axiosInstance().get(endpoint, {
+    const instance = axiosInstance();
+    const response = await instance.get<ApiResponse<TData>>(endpoint, {
       params: options?.params,
       headers: options?.headers,
     });
@@ -35,16 +40,20 @@ const httpGet = async (endpoint: string, options?: ApiRequestOptions) => {
   }
 };
 
-const httpPost = async (
+const httpPost = async <TData>(
   endpoint: string,
   data: unknown,
   options?: ApiRequestOptions,
-) => {
+): Promise<ApiResponse<TData>> => {
   try {
-    const response = await axiosInstance().post(endpoint, data, {
-      params: options?.params,
-      headers: options?.headers,
-    });
+    const response = await axiosInstance().post<ApiResponse<TData>>(
+      endpoint,
+      data,
+      {
+        params: options?.params,
+        headers: options?.headers,
+      },
+    );
     return response.data;
   } catch (error) {
     console.error(`POST request to ${endpoint} failed:`, error);
@@ -52,16 +61,20 @@ const httpPost = async (
   }
 };
 
-const httpPut = async (
+const httpPut = async <TData>(
   endpoint: string,
   data: unknown,
   options?: ApiRequestOptions,
-) => {
+): Promise<ApiResponse<TData>> => {
   try {
-    const response = await axiosInstance().put(endpoint, data, {
-      params: options?.params,
-      headers: options?.headers,
-    });
+    const response = await axiosInstance().put<ApiResponse<TData>>(
+      endpoint,
+      data,
+      {
+        params: options?.params,
+        headers: options?.headers,
+      },
+    );
     return response.data;
   } catch (error) {
     console.error(`PUT request to ${endpoint} failed:`, error);
@@ -69,16 +82,20 @@ const httpPut = async (
   }
 };
 
-const httpPatch = async (
+const httpPatch = async <TData>(
   endpoint: string,
   data: unknown,
   options?: ApiRequestOptions,
-) => {
+): Promise<ApiResponse<TData>> => {
   try {
-    const response = await axiosInstance().patch(endpoint, data, {
-      params: options?.params,
-      headers: options?.headers,
-    });
+    const response = await axiosInstance().patch<ApiResponse<TData>>(
+      endpoint,
+      data,
+      {
+        params: options?.params,
+        headers: options?.headers,
+      },
+    );
     return response.data;
   } catch (error) {
     console.error(`PATCH request to ${endpoint} failed:`, error);
@@ -86,12 +103,18 @@ const httpPatch = async (
   }
 };
 
-const httpDelete = async (endpoint: string, options?: ApiRequestOptions) => {
+const httpDelete = async <TData>(
+  endpoint: string,
+  options?: ApiRequestOptions,
+): Promise<ApiResponse<TData>> => {
   try {
-    const response = await axiosInstance().delete(endpoint, {
-      params: options?.params,
-      headers: options?.headers,
-    });
+    const response = await axiosInstance().delete<ApiResponse<TData>>(
+      endpoint,
+      {
+        params: options?.params,
+        headers: options?.headers,
+      },
+    );
     return response.data;
   } catch (error) {
     console.error(`DELETE request to ${endpoint} failed:`, error);
